@@ -28,7 +28,17 @@ export const TransactionModal = ({ isOpen, onClose, initialData }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.description || !formData.amount || !formData.date) return;
+    
+    // Validate form data
+    if (!formData.description || !formData.amount || !formData.date) {
+      alert('Please fill in all required fields');
+      return;
+    }
+    
+    if (parseFloat(formData.amount) <= 0) {
+      alert('Amount must be greater than 0');
+      return;
+    }
     
     const dateObj = new Date(formData.date);
     dateObj.setHours(12, 0, 0);
