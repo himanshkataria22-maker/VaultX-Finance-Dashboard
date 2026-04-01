@@ -17,6 +17,11 @@ export const AppProvider = ({ children }) => {
     return localStorage.getItem('vaultx_theme') || 'dark'; // prefer dark default for premium look
   });
 
+  const [budgets, setBudgets] = useState(() => {
+    const saved = localStorage.getItem('vaultx_budgets');
+    return saved ? JSON.parse(saved) : [];
+  });
+
   useEffect(() => {
     localStorage.setItem('vaultx_transactions', JSON.stringify(transactions));
   }, [transactions]);
@@ -33,6 +38,10 @@ export const AppProvider = ({ children }) => {
       document.documentElement.classList.remove('dark');
     }
   }, [theme]);
+
+  useEffect(() => {
+    localStorage.setItem('vaultx_budgets', JSON.stringify(budgets));
+  }, [budgets]);
 
   const addTransaction = (transaction) => {
     setTransactions(prev => [transaction, ...prev]);
@@ -54,6 +63,18 @@ export const AppProvider = ({ children }) => {
     setTheme(t => t === 'light' ? 'dark' : 'light');
   };
 
+  const addBudget = (budget) => {
+    setBudgets(prev => [...prev, budget]);
+  };
+
+  const updateBudget = (updatedBudget) => {
+    setBudgets(prev => prev.map(b => b.id === updatedBudget.id ? updatedBudget : b));
+  };
+
+  const deleteBudget = (id) => {
+    setBudgets(prev => prev.filter(b => b.id !== id));
+  };
+
   return (
     <AppContext.Provider 
       value={{
@@ -64,7 +85,11 @@ export const AppProvider = ({ children }) => {
         role,
         toggleRole,
         theme,
-        toggleTheme
+        toggleTheme,
+        budgets,
+        addBudget,
+        updateBudget,
+        deleteBudget
       }}
     >
       {children}

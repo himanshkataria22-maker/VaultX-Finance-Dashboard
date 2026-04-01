@@ -3,9 +3,23 @@ import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
 import { Outlet, NavLink } from 'react-router-dom';
 import { LayoutDashboard, Receipt, Lightbulb, Wallet, X } from 'lucide-react';
+import { useKeyboardShortcuts } from '../../hooks/useKeyboardShortcuts';
+import { KeyboardShortcutsModal } from '../modals/KeyboardShortcutsModal';
+import { useAppContext } from '../../context/AppContext';
 
 export const Layout = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showShortcutsModal, setShowShortcutsModal] = useState(false);
+  const { toggleTheme } = useAppContext();
+
+  useKeyboardShortcuts({
+    onShowHelp: () => setShowShortcutsModal(true),
+    onEscape: () => {
+      setMobileMenuOpen(false);
+      setShowShortcutsModal(false);
+    },
+    onToggleTheme: toggleTheme,
+  });
 
   const navItems = [
     { name: 'Dashboard', path: '/', icon: <LayoutDashboard size={20} /> },
@@ -63,6 +77,8 @@ export const Layout = () => {
           </div>
         </div>
       )}
+
+      <KeyboardShortcutsModal isOpen={showShortcutsModal} onClose={() => setShowShortcutsModal(false)} />
     </div>
   );
 };

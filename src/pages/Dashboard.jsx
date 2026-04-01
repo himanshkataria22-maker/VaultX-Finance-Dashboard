@@ -1,14 +1,18 @@
 import { SummaryCard } from '../components/cards/SummaryCard';
 import { useTransactions } from '../hooks/useTransactions';
-import { Wallet, TrendingUp, TrendingDown, PiggyBank, ArrowRight } from 'lucide-react';
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, PieChart, Pie, Cell } from 'recharts';
+import { Wallet, TrendingUp, TrendingDown, PiggyBank, ArrowRight, Download, FileText, FileSpreadsheet } from 'lucide-react';
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, PieChart, Pie, Cell, BarChart, Bar, AreaChart, Area } from 'recharts';
 import { CATEGORY_COLORS } from '../data/mockData';
 import { format, parseISO } from 'date-fns';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { exportToCSV, exportToPDF } from '../utils/exportUtils';
+import { BudgetTracker } from '../components/budget/BudgetTracker';
+import { useState } from 'react';
 
 export const Dashboard = () => {
   const { transactions, totalBalance, totalIncome, totalExpense } = useTransactions();
+  const [showExportMenu, setShowExportMenu] = useState(false);
 
   // Mock previous values to show realistic percentage changes
   const prevBalance = totalBalance * 0.85;
@@ -19,6 +23,15 @@ export const Dashboard = () => {
   const getChange = (current, previous) => previous > 0 ? ((current - previous) / previous) * 100 : 0;
 
   const totalSavings = totalIncome - totalExpense;
+
+  const handleExport = (type) => {
+    if (type === 'csv') {
+      exportToCSV(transactions);
+    } else if (type === 'pdf') {
+      exportToPDF(transactions, { totalIncome, totalExpense, totalBalance });
+    }
+    setShowExportMenu(false);
+  };
 
   // Pie Chart Data (Expenses by Category)
   const expensesByCategory = {};
@@ -45,10 +58,48 @@ export const Dashboard = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex flex-col gap-2"
+        className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
       >
-        <h1 className="text-2xl font-bold tracking-tight">Dashboard Summary</h1>
-        <p className="text-[var(--text-muted)]">Here's what's happening with your finances today.</p>
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Dashboard Summary</h1>
+          <p className="text-[var(--text-muted)]">Here's what's happening with your finances today.</p>
+        </div>
+        
+        {/* Export Button */}
+        <div className="relative">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setShowExportMenu(!showExportMenu)}
+            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-medium shadow-sm"
+          >
+            <Download size={18} />
+            Export Data
+          </motion.button>
+          
+          {showExportMenu && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="absolute right-0 mt-2 w-48 bg-[var(--card)] border border-[var(--border-base)] rounded-xl shadow-lg overflow-hidden z-10"
+            >
+              <button
+                onClick={() => handleExport('csv')}
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[var(--background)] transition-colors text-left"
+              >
+                <FileSpreadsheet size={18} className="text-green-600" />
+                <span>Export as CSV</span>
+              </button>
+              <button
+                onClick={() => handleExport('pdf')}
+                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[var(--background)] transition-colors text-left"
+              >
+                <FileText size={18} className="text-red-600" />
+                <span>Export as PDF</span>
+              </button>
+            </motion.div>
+          )}
+        </div>
       </motion.div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
@@ -221,6 +272,74 @@ export const Dashboard = () => {
           )}
         </div>
       </motion.div>
+
+      {/* Budget Tracker Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.6 }}
+      >
+        <BudgetTracker transactions={transactions} />
+      </motion.div>
+
+      {/* Additional Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Bar Chart - Monthly Comparison */}
+        <motion.div
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.7 }}
+          className="card-premium p-6"
+        >
+          <h3 className="font-semibold text-lg mb-6">Income vs Expenses</h3>
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+              <BarChart data={[
+                { name: 'Income', value: totalIncome, fill: '#22c55e' },
+                { name: 'Expenses', value: totalExpense, fill: '#ef4444' },
+                { name: 'Savings', value: totalSavings, fill: '#6366f1' }
+              ]}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-base)" />
+                <XAxis dataKey="name" tick={{ fill: 'var(--text-muted)' }} />
+                <YAxis tick={{ fill: 'var(--text-muted)' }} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: 'var(--card)', borderColor: 'var(--border-base)', borderRadius: '12px' }}
+                />
+                <Bar dataKey="value" radius={[8, 8, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </motion.div>
+
+        {/* Area Chart - Cumulative */}
+        <motion.div
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+          className="card-premium p-6"
+        >
+          <h3 className="font-semibold text-lg mb-6">Balance Trend</h3>
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+              <AreaChart data={lineData}>
+                <defs>
+                  <linearGradient id="colorAmount" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-base)" />
+                <XAxis dataKey="date" tick={{ fill: 'var(--text-muted)' }} />
+                <YAxis tick={{ fill: 'var(--text-muted)' }} />
+                <Tooltip 
+                  contentStyle={{ backgroundColor: 'var(--card)', borderColor: 'var(--border-base)', borderRadius: '12px' }}
+                />
+                <Area type="monotone" dataKey="amount" stroke="#6366f1" strokeWidth={2} fillOpacity={1} fill="url(#colorAmount)" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 };
