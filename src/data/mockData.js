@@ -75,3 +75,9 @@ export const CATEGORY_COLORS = {
 };
 
 export const categoriesList = Object.keys(CATEGORY_COLORS);
+
+// Transaction types
+export const TRANSACTION_TYPES = {
+  INCOME: 'income',
+  EXPENSE: 'expense'
+};
