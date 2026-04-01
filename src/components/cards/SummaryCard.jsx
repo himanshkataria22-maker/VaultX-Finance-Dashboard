@@ -1,12 +1,23 @@
 import { TrendingUp, TrendingDown } from 'lucide-react';
-import CountUp from 'react-countup';
 
-export const SummaryCard = ({ title, value, percentChange, icon, isCurrency = true, iconBgClass = "bg-indigo-100 dark:bg-indigo-500/20", iconColorClass = "text-indigo-600 dark:text-indigo-400" }) => {
+export const SummaryCard = ({ 
+  title, 
+  value, 
+  percentChange, 
+  icon, 
+  isCurrency = true, 
+  iconBgClass = "bg-indigo-100 dark:bg-indigo-500/20", 
+  iconColorClass = "text-indigo-600 dark:text-indigo-400" 
+}) => {
+  const formattedValue = isCurrency 
+    ? `$${value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}` 
+    : value.toString();
+
   return (
     <div className="card-premium p-6 group cursor-default">
       <div className="flex justify-between items-start mb-4">
         <div className={`p-3 rounded-xl transition-transform duration-300 group-hover:scale-110 ${iconBgClass}`}>
-          <div className={`${iconColorClass}`}>{icon}</div>
+          <div className={iconColorClass}>{icon}</div>
         </div>
         
         {percentChange !== undefined && percentChange !== 0 && (
@@ -18,10 +29,9 @@ export const SummaryCard = ({ title, value, percentChange, icon, isCurrency = tr
       </div>
       <div>
         <h3 className="text-[var(--text-muted)] text-sm font-medium mb-1">{title}</h3>
-        <h2 className="text-3xl font-bold tracking-tight text-[var(--text-main)] transition-colors">
-          {isCurrency && '$'}
-          <CountUp end={value} duration={1.5} separator="," decimals={isCurrency ? 2 : 0} />
-        </h2>
+        <p className="text-3xl font-bold tracking-tight text-[var(--text-main)] transition-colors">
+          {formattedValue}
+        </p>
       </div>
     </div>
   );

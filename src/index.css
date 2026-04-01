@@ -2,35 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: #f8fafc; /* slate 50 */
-    --card: #ffffff;
-    --text-main: #0f172a; /* slate 900 */
-    --text-muted: #64748b; /* slate 500 */
-    --border-base: #e2e8f0; /* slate 200 */
-  }
-
-  .dark {
-    --background: #0f172a; /* slate 900 */
-    --card: #1e293b; /* slate 800 */
-    --text-main: #f8fafc; /* slate 50 */
-    --text-muted: #94a3b8; /* slate 400 */
-    --border-base: #334155; /* slate 700 */
-  }
+:root {
+  --background: #f8fafc;
+  --card: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border-base: #e2e8f0;
 }
 
-@layer base {
-  body {
-    @apply bg-[var(--background)] text-[var(--text-main)] antialiased transition-colors duration-300;
-  }
+.dark {
+  --background: #0f172a;
+  --card: #1e293b;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --border-base: #334155;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text-main);
+  font-family: system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 @layer utilities {
   .glass {
-    @apply bg-[var(--card)]/80 backdrop-blur-md border border-[var(--border-base)];
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-base);
   }
+  
+  .dark .glass {
+    background-color: rgba(30, 41, 59, 0.85);
+  }
+  
   .card-premium {
-    @apply glass rounded-2xl shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1;
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-base);
+    @apply rounded-2xl shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1;
+  }
+  
+  .dark .card-premium {
+    background-color: rgba(30, 41, 59, 0.85);
   }
 }

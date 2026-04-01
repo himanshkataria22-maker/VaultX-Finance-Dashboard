@@ -6,6 +6,8 @@ import { Insights } from './pages/Insights';
 import { AppProvider } from './context/AppContext';
 
 function App() {
+  console.log('App component rendering');
+  
   return (
     <AppProvider>
       <Routes>
