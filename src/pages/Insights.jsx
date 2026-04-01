@@ -29,7 +29,7 @@ export const Insights = () => {
   };
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto animate-in fade-in duration-500">
+    <div className="space-y-6 max-w-5xl mx-auto animate-in fade-in duration-500">
       <div className="flex flex-col gap-2 mb-8 text-center md:text-left">
         <div className="inline-flex items-center gap-2 justify-center md:justify-start">
           <div className="p-2 bg-yellow-100 text-yellow-600 dark:bg-yellow-500/20 dark:text-yellow-400 rounded-xl">
