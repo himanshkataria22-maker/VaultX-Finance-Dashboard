@@ -72,7 +72,7 @@ export const Layout = () => {
               ))}
             </nav>
             <div className="p-4 border-t border-[var(--border-base)] text-xs text-[var(--text-muted)] text-center">
-              Powered by VaultX Premium
+              Made with VaultX
             </div>
           </div>
         </div>

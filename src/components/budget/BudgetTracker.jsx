@@ -64,7 +64,7 @@ export const BudgetTracker = ({ transactions }) => {
           </div>
           <div>
             <h2 className="text-xl font-bold">Budget Tracker</h2>
-            <p className="text-sm text-[var(--text-muted)]">Monitor your spending limits</p>
+            <p className="text-sm text-[var(--text-muted)]">Keep your spending in check</p>
           </div>
         </div>
         
@@ -223,7 +223,7 @@ export const BudgetTracker = ({ transactions }) => {
         ) : (
           <div className="col-span-2 text-center py-12 text-[var(--text-muted)]">
             <Target size={48} className="mx-auto mb-4 opacity-50" />
-            <p>No budgets set yet. Add one to start tracking!</p>
+            <p>No budgets yet. Create one to get started!</p>
           </div>
         )}
       </div>

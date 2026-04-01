@@ -66,7 +66,7 @@ export const Sidebar = () => {
         transition={{ delay: 0.6 }}
         className="p-4 border-t border-[var(--border-base)] text-xs text-[var(--text-muted)] text-center"
       >
-        Powered by VaultX Premium
+        Made with VaultX
       </motion.div>
     </motion.aside>
   );

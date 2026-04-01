@@ -40,8 +40,8 @@ export const SummaryCard = ({
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      whileHover={{ y: -8, transition: { duration: 0.2 } }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      whileHover={{ y: -6, transition: { duration: 0.2 } }}
       className="card-premium p-6 group cursor-default relative overflow-hidden"
     >
       <motion.div 

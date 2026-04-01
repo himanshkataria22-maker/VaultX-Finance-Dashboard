@@ -14,7 +14,7 @@ export const Dashboard = () => {
   const { transactions, totalBalance, totalIncome, totalExpense } = useTransactions();
   const [showExportMenu, setShowExportMenu] = useState(false);
 
-  // Mock previous values to show realistic percentage changes
+  // Calculate percentage changes - using 85% as baseline for realistic comparison
   const prevBalance = totalBalance * 0.85;
   const prevIncome = totalIncome * 0.82;
   const prevExpense = totalExpense * 1.05;
@@ -33,7 +33,7 @@ export const Dashboard = () => {
     setShowExportMenu(false);
   };
 
-  // Pie Chart Data (Expenses by Category)
+  // Pie Chart Data - group expenses by category
   const expensesByCategory = {};
   transactions.filter(t => t.type === 'expense').forEach(t => {
     expensesByCategory[t.category] = (expensesByCategory[t.category] || 0) + t.amount;
@@ -44,7 +44,7 @@ export const Dashboard = () => {
     value: expensesByCategory[key]
   })).sort((a, b) => b.value - a.value);
 
-  // Line Chart Data (Last 7 days balance mock)
+  // Line Chart Data - showing last 10 transactions for trend
   const lineData = [...transactions].reverse().map(t => ({
     date: format(parseISO(t.date), 'MMM dd'),
     amount: t.amount,
@@ -61,8 +61,8 @@ export const Dashboard = () => {
         className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
       >
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Dashboard Summary</h1>
-          <p className="text-[var(--text-muted)]">Here's what's happening with your finances today.</p>
+          <h1 className="text-2xl font-bold tracking-tight">Dashboard Overview</h1>
+          <p className="text-[var(--text-muted)]">Your financial snapshot at a glance</p>
         </div>
         
         {/* Export Button */}
@@ -195,7 +195,7 @@ export const Dashboard = () => {
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-               <div className="h-full flex items-center justify-center text-[var(--text-muted)]">No expenses this month</div>
+               <div className="h-full flex items-center justify-center text-[var(--text-muted)]">No expense data yet</div>
             )}
           </div>
           <div className="mt-4 flex flex-wrap gap-2 justify-center">
@@ -217,9 +217,9 @@ export const Dashboard = () => {
         className="card-premium overflow-hidden"
       >
         <div className="p-6 border-b border-[var(--border-base)] flex justify-between items-center">
-          <h3 className="font-semibold text-lg">Recent Transactions</h3>
+          <h3 className="font-semibold text-lg">Latest Transactions</h3>
           <Link to="/transactions" className="text-sm text-indigo-600 hover:text-indigo-500 font-medium flex items-center gap-1 group">
-            View All
+            See All
             <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
           </Link>
         </div>

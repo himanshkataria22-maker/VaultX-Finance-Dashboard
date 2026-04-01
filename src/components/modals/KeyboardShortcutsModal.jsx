@@ -27,7 +27,7 @@ export const KeyboardShortcutsModal = ({ isOpen, onClose }) => {
                 </div>
                 <div>
                   <h2 className="text-xl font-semibold">Keyboard Shortcuts</h2>
-                  <p className="text-sm text-[var(--text-muted)]">Navigate faster with these shortcuts</p>
+                  <p className="text-sm text-[var(--text-muted)]">Work faster with these hotkeys</p>
                 </div>
               </div>
               <motion.button
