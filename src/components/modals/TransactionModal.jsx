@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { useTransactions } from '../../hooks/useTransactions';
 import { categoriesList } from '../../data/mockData';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const TransactionModal = ({ isOpen, onClose, initialData }) => {
   const { addTransaction, updateTransaction } = useTransactions();
@@ -25,13 +26,10 @@ export const TransactionModal = ({ isOpen, onClose, initialData }) => {
     }
   }, [initialData]);
 
-  if (!isOpen) return null;
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.description || !formData.amount || !formData.date) return;
     
-    // Add timezone neutral time approximation so it doesn't shift days
     const dateObj = new Date(formData.date);
     dateObj.setHours(12, 0, 0);
 
@@ -51,25 +49,50 @@ export const TransactionModal = ({ isOpen, onClose, initialData }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 min-h-screen">
-      <div 
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200" 
-        onClick={onClose}
-      />
-      <div className="relative w-full max-w-lg bg-[var(--card)] rounded-2xl shadow-2xl animate-in zoom-in-95 duration-200 border border-[var(--border-base)]">
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 min-h-screen">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm" 
+            onClick={onClose}
+          />
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.9, opacity: 0, y: 20 }}
+            transition={{ type: "spring", duration: 0.5 }}
+            className="relative w-full max-w-lg bg-[var(--card)] rounded-2xl shadow-2xl border border-[var(--border-base)]"
+          >
         <div className="flex items-center justify-between p-6 border-b border-[var(--border-base)]">
-          <h2 className="text-xl font-semibold text-[var(--text-main)]">
+          <motion.h2 
+            initial={{ x: -20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ delay: 0.1 }}
+            className="text-xl font-semibold text-[var(--text-main)]"
+          >
             {isEditing ? 'Edit Transaction' : 'Add New Transaction'}
-          </h2>
-          <button 
+          </motion.h2>
+          <motion.button 
+            whileHover={{ scale: 1.1, rotate: 90 }}
+            whileTap={{ scale: 0.9 }}
             onClick={onClose} 
             className="p-2 text-[var(--text-muted)] hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-full transition-colors"
           >
             <X size={20} />
-          </button>
+          </motion.button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+        <motion.form 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          onSubmit={handleSubmit} 
+          className="p-6 space-y-5"
+        >
           <div className="flex gap-4 p-1 bg-[var(--background)] rounded-xl border border-[var(--border-base)]">
              <button
                 type="button"
@@ -154,22 +177,28 @@ export const TransactionModal = ({ isOpen, onClose, initialData }) => {
           </div>
 
           <div className="pt-2 flex justify-end gap-3">
-            <button 
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               type="button" 
               onClick={onClose}
               className="px-5 py-2.5 text-sm font-medium text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors"
             >
               Cancel
-            </button>
-            <button 
+            </motion.button>
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               type="submit"
               className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white text-sm font-semibold rounded-xl shadow-sm shadow-indigo-600/20 transition-all"
             >
               {isEditing ? 'Save Changes' : 'Confirm'}
-            </button>
+            </motion.button>
           </div>
-        </form>
-      </div>
+        </motion.form>
+      </motion.div>
     </div>
+      )}
+    </AnimatePresence>
   );
 };
