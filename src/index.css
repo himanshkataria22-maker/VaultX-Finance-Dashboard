@@ -27,6 +27,19 @@ body {
   transition: background-color 0.3s, color 0.3s;
 }
 
+* {
+  scroll-behavior: smooth;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
 @layer utilities {
   .glass {
     background-color: rgba(255, 255, 255, 0.85);
@@ -42,10 +55,23 @@ body {
     background-color: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(12px);
     border: 1px solid var(--border-base);
-    @apply rounded-2xl shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1;
+    @apply rounded-2xl shadow-sm transition-all duration-300;
+  }
+  
+  .card-premium:hover {
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   }
   
   .dark .card-premium {
     background-color: rgba(30, 41, 59, 0.85);
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }

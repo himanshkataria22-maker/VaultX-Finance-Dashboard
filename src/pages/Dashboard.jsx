@@ -5,6 +5,7 @@ import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianG
 import { CATEGORY_COLORS } from '../data/mockData';
 import { format, parseISO } from 'date-fns';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 export const Dashboard = () => {
   const { transactions, totalBalance, totalIncome, totalExpense } = useTransactions();
@@ -39,11 +40,16 @@ export const Dashboard = () => {
   const recentTransactions = [...transactions].sort((a,b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      <div className="flex flex-col gap-2">
+    <div className="space-y-6">
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col gap-2"
+      >
         <h1 className="text-2xl font-bold tracking-tight">Dashboard Summary</h1>
         <p className="text-[var(--text-muted)]">Here's what's happening with your finances today.</p>
-      </div>
+      </motion.div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <SummaryCard 
@@ -82,10 +88,15 @@ export const Dashboard = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Line Chart */}
-        <div className="card-premium p-6 lg:col-span-2 flex flex-col">
+        <motion.div 
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="card-premium p-6 lg:col-span-2 flex flex-col"
+        >
           <h3 className="font-semibold text-lg mb-6">Recent Activity Trend</h3>
-          <div className="h-72 w-full flex-1">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="h-72 w-full flex-1 min-h-0">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
               <LineChart data={lineData} margin={{ top: 5, right: 20, left: -20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-base)" />
                 <XAxis dataKey="date" tick={{ fill: 'var(--text-muted)' }} tickLine={false} axisLine={false} />
@@ -98,14 +109,19 @@ export const Dashboard = () => {
               </LineChart>
             </ResponsiveContainer>
           </div>
-        </div>
+        </motion.div>
 
         {/* Donut Chart */}
-        <div className="card-premium p-6 flex flex-col">
+        <motion.div 
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="card-premium p-6 flex flex-col"
+        >
           <h3 className="font-semibold text-lg mb-6">Expenses by Category</h3>
-          <div className="h-64 w-full flex-1 relative">
+          <div className="h-64 w-full flex-1 relative min-h-0">
             {pieData.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
+              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <PieChart>
                   <Tooltip 
                     contentStyle={{ backgroundColor: 'var(--card)', borderColor: 'var(--border-base)', color: 'var(--text-main)', borderRadius: '12px' }}
@@ -139,11 +155,16 @@ export const Dashboard = () => {
                 </div>
              ))}
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Recent Transactions Preview */}
-      <div className="card-premium overflow-hidden">
+      <motion.div 
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.5 }}
+        className="card-premium overflow-hidden"
+      >
         <div className="p-6 border-b border-[var(--border-base)] flex justify-between items-center">
           <h3 className="font-semibold text-lg">Recent Transactions</h3>
           <Link to="/transactions" className="text-sm text-indigo-600 hover:text-indigo-500 font-medium flex items-center gap-1 group">
@@ -163,8 +184,14 @@ export const Dashboard = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[var(--border-base)]">
-                {recentTransactions.map((tx) => (
-                  <tr key={tx.id} className="hover:bg-[var(--background)]/50 transition-colors">
+                {recentTransactions.map((tx, index) => (
+                  <motion.tr 
+                    key={tx.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="hover:bg-[var(--background)]/50 transition-colors"
+                  >
                     <td className="px-6 py-4 text-sm text-[var(--text-muted)] whitespace-nowrap">
                       {format(parseISO(tx.date), 'MMM dd, yyyy')}
                     </td>
@@ -185,7 +212,7 @@ export const Dashboard = () => {
                     <td className={`px-6 py-4 text-right font-semibold whitespace-nowrap ${tx.type === 'income' ? 'text-green-600 dark:text-green-400' : 'text-[var(--text-main)]'}`}>
                       {tx.type === 'income' ? '+' : '-'}${tx.amount.toFixed(2)}
                     </td>
-                  </tr>
+                  </motion.tr>
                 ))}
               </tbody>
             </table>
@@ -193,7 +220,7 @@ export const Dashboard = () => {
             <div className="p-8 text-center text-[var(--text-muted)]">No transactions available.</div>
           )}
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
