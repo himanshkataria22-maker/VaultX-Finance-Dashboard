@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #f8fafc; /* slate 50 */
+    --card: #ffffff;
+    --text-main: #0f172a; /* slate 900 */
+    --text-muted: #64748b; /* slate 500 */
+    --border-base: #e2e8f0; /* slate 200 */
+  }
+
+  .dark {
+    --background: #0f172a; /* slate 900 */
+    --card: #1e293b; /* slate 800 */
+    --text-main: #f8fafc; /* slate 50 */
+    --text-muted: #94a3b8; /* slate 400 */
+    --border-base: #334155; /* slate 700 */
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-[var(--background)] text-[var(--text-main)] antialiased transition-colors duration-300;
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-[var(--card)]/80 backdrop-blur-md border border-[var(--border-base)];
+  }
+  .card-premium {
+    @apply glass rounded-2xl shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1;
+  }
+}
